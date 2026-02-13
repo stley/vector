@@ -44,20 +44,26 @@ public:
     //modifiers
     bool push_back(const T& value);
 
-    //access
+    //access, both read and write
     T& at(size_t index);
-    T* operator[](size_t index);
+    T& operator[](size_t index);
+    const T& at(size_t index) const;
+    const T& operator[](size_t index) const;
 
-    bool empty();
-    size_t size();
-    size_t byte_size();
-    size_t max_size();
+    T& front() { return data_pointer; }
+    T& back() { return (data_pointer + size_); }
+    T* data() { return data_pointer; }
+    bool empty() { return (size_ == 0); }
+    size_t size() { return this->size_; }
+    size_t byte_size() { return (this->size_)*sizeof(T); }
+    size_t max_size() { return this->capacity_; }
+    size_t capacity() { return this->capacity_; }
+    size_t byte_cap() { return (this->capacity_)*(sizeof(T)); }
+
+
     bool reserve(size_t resize);
-    size_t capacity();
-    size_t byte_cap();
+
     bool shrink_to_fit(size_t resize);
-
-
 };
 
 
@@ -76,10 +82,11 @@ bool vector<T>::push_back(const T& value)
     {
         if (size_ == capacity_)
         {
-            size_t new_cap = capacity_*2;
+            size_t new_cap = capacity_ + (capacity_/2);
             T* new_ptr = reinterpret_cast<T*>(malloc((sizeof(T)*new_cap)));
 
-            if (!new_ptr) return false;
+            if (!new_ptr)
+                return false;
 
             std::memcpy(new_ptr, data_pointer, (size_ * sizeof(T)));
             cleanup(data_pointer, (sizeof(T) * size_));
@@ -106,56 +113,25 @@ T& vector<T>::at(size_t index)
 }
 
 template <typename T>
-T* vector<T>::operator[](size_t index)
+const T& vector<T>::at(size_t index) const
 {
-    if (index >= size_ )
+    if (index >= size_)
         throw std::out_of_range("Vector index out of range");
-
-    else return (data_pointer+index);
+    
+    else return *(data_pointer+index);
 }
 
 template <typename T>
-bool vector<T>::empty()
+T& vector<T>::operator[](size_t index)
 {
-    return (size_ == 0);
+    return *(data_pointer+index);
 }
 
 template <typename T>
-size_t vector<T>::size()
+const T& vector<T>::operator[](size_t index) const
 {
-    return this->size_;
+    return *(data_pointer+index);
 }
-
-template <typename T>
-size_t vector<T>::max_size()
-{
-    return this->capacity_;
-}
-
-template <typename T>
-size_t vector<T>::capacity()
-{
-    return this->capacity_;
-}
-
-template <typename T>
-size_t vector<T>::byte_size()
-{
-    return (this->size_)*sizeof(T);
-}
-
-template <typename T>
-size_t vector<T>::byte_cap()
-{
-    return (this->capacity_)*sizeof(T);
-}
-
-
-
-
-
-
-
 
 
 

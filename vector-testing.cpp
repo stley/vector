@@ -21,7 +21,7 @@ int main()
     printLine("Vector size: %d elements (%d bytes) | Capacity: %d elements (%d bytes)", firstOne.size(), firstOne.byte_size(), firstOne.capacity(), firstOne.byte_cap());
 
     size_t vector_size = firstOne.capacity();
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 100; i++)
     {
         firstOne.push_back(i+3);
     }   
@@ -29,7 +29,7 @@ int main()
     for (int i = 0; i < firstOne.size(); i++)
     {
         std::cout << "at " << i << " " << (firstOne.at(i)) << "\n";
-        std::cout << "at " << i << " " << *(firstOne[i]) << "\n";
+        std::cout << "at " << i << " " << (firstOne[i]) << "\n";
     }
 
     printLine("Vector size: %d elements (%d bytes) | Capacity: %d elements (%d bytes)", firstOne.size(), firstOne.byte_size(), firstOne.capacity(), firstOne.byte_cap());
