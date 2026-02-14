@@ -26,10 +26,12 @@ int main()
         firstOne.push_back(i+3);
     }   
 
+    firstOne.resize(10);
+
+    firstOne.push_back(34);
     for (int i = 0; i < firstOne.size(); i++)
     {
         std::cout << "at " << i << " " << (firstOne.at(i)) << "\n";
-        std::cout << "at " << i << " " << (firstOne[i]) << "\n";
     }
 
     printLine("Vector size: %d elements (%d bytes) | Capacity: %d elements (%d bytes)", firstOne.size(), firstOne.byte_size(), firstOne.capacity(), firstOne.byte_cap());
