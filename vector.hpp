@@ -54,47 +54,19 @@ public:
     
     
     //Modifiers
-    bool clear();
-    bool insert();
+    void clear();
+
     bool push_back(const T& value);
 
-    bool reserve(size_t to_reserve);
-
+    void pop_back();
+    
     bool resize(size_t newsize);
+
+    bool reserve(size_t to_reserve);
 };
 
 
-template <typename T>
-bool vector<T>::push_back(const T& value)
-{
-    if (!data_pointer)
-    {
-        capacity_ = 2;
-        data_pointer = reinterpret_cast<T*>(malloc(sizeof(T)*capacity_));
-        if (!data_pointer) return false;
-        
-        
-    }
-    else
-    {
-        if (size_ == capacity_)
-        {
-            size_t new_cap = capacity_ + (capacity_/2);
-            T* new_ptr = reinterpret_cast<T*>(realloc(data_pointer, (sizeof(T)*new_cap) ));
 
-            if (!new_ptr)
-                return false;
-            
-            capacity_ = new_cap;
-            data_pointer = new_ptr;
-        }
-
-    }
-
-    new (data_pointer + size_) T(value);
-    size_++;
-    return true;
-}
 
 
 template <typename T>
@@ -128,24 +100,48 @@ const T& vector<T>::operator[](size_t index) const
 }
 
 template <typename T>
-bool vector<T>::reserve(size_t to_reserve)
+void vector<T>::clear()
+{
+    this->size_ = 0;
+}
+
+template <typename T>
+bool vector<T>::push_back(const T& value)
 {
     if (!data_pointer)
     {
-        data_pointer = reinterpret_cast<T*>(malloc(sizeof(T)*to_reserve));
+        capacity_ = 2;
+        data_pointer = reinterpret_cast<T*>(malloc(sizeof(T)*capacity_));
         if (!data_pointer) return false;
-        capacity_ = to_reserve;
-        return true;
+        
+        
+    }
+    else
+    {
+        if (size_ == capacity_)
+        {
+            size_t new_cap = capacity_ + (capacity_/2);
+            T* new_ptr = reinterpret_cast<T*>(realloc(data_pointer, (sizeof(T)*new_cap) ));
+
+            if (!new_ptr)
+                return false;
+            
+            capacity_ = new_cap;
+            data_pointer = new_ptr;
+        }
+
     }
 
-    size_t new_cap = capacity_+to_reserve;
-
-    T* reallocatedPointer = reinterpret_cast<T*>(realloc(data_pointer, (sizeof(T)*new_cap)));
-    if(!reallocatedPointer) return false;
-
-    data_pointer = reallocatedPointer;
-    capacity_ = new_cap;
+    new (data_pointer + size_) T(value);
+    size_++;
     return true;
+}
+
+template <typename T>
+void vector<T>::pop_back()
+{
+    if(size_ > 0)
+    size_--;
 }
 
 template <typename T>
@@ -167,6 +163,27 @@ bool vector<T>::resize(size_t newsize)
 
     size_ = newsize;
 
+    return true;
+}
+
+template <typename T>
+bool vector<T>::reserve(size_t to_reserve)
+{
+    if (!data_pointer)
+    {
+        data_pointer = reinterpret_cast<T*>(malloc(sizeof(T)*to_reserve));
+        if (!data_pointer) return false;
+        capacity_ = to_reserve;
+        return true;
+    }
+
+    size_t new_cap = capacity_+to_reserve;
+
+    T* reallocatedPointer = reinterpret_cast<T*>(realloc(data_pointer, (sizeof(T)*new_cap)));
+    if(!reallocatedPointer) return false;
+
+    data_pointer = reallocatedPointer;
+    capacity_ = new_cap;
     return true;
 }
 
